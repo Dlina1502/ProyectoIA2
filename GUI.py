@@ -8,6 +8,7 @@ from typing_extensions import IntVar
 from defer import return_value
 from requests import delete
 import State
+import IA
 
 class App():
 
@@ -20,6 +21,10 @@ class App():
 
         self.anteriorXJ2 = self.gs.xJugador
         self.anteriorYJ2 = self.gs.yJugador
+
+        self.anteriorXM = self.gs.xMaquina
+        self.anteriorYM = self.gs.yMaquina
+
         #print(self.posXJ2," / ", self.posYJ2)
         self.turno = "JM"
 
@@ -113,7 +118,7 @@ class App():
         self.posYJ2 = self.filaY.get()
         
         #Movimiento 1
-        if (self.posXJ2<8 and self.posYJ2<8):
+        if (self.posXJ2<8 and self.posYJ2<8 and self.posXJ2>=0 and self.posYJ2 >= 0):
             if(self.posYJ2 == self.anteriorYJ2+1 and self.posXJ2 == self.anteriorXJ2+2):
                 auxX = self.posXJ2
                 auxY = self.posYJ2
@@ -200,6 +205,10 @@ class App():
             self.anteriorYJ2 = y
         else:
             print("error, es la casilla del otro jugador")
+
+        maquina = IA.Node(-1, 1, self.tablero, self.anteriorXJ2, self.anteriorYJ2, self.puntosJH ,self.anteriorXM, self.anteriorYM, self.puntosJM, 0, 0, 0)
+
+        self.tablero = maquina.getBoard()
 
         print(x,y)
         print(self.tablero)
