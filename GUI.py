@@ -206,7 +206,7 @@ class App():
         else:
             print("error, es la casilla del otro jugador")
 
-        maquina = IA.Node(-1, 1, self.tablero, self.anteriorXJ2, self.anteriorYJ2, self.puntosJH ,self.anteriorXM, self.anteriorYM, self.puntosJM, 0, 0, 0)
+        maquina = IA.Node(-1, 0, self.tablero[:], self.anteriorXJ2, self.anteriorYJ2, self.puntosJH ,self.anteriorXM, self.anteriorYM, self.puntosJM, 0, 0, 0, 0)
 
         self.tablero = maquina.getBoard()
 

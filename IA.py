@@ -4,6 +4,7 @@ from math import inf
 from sys import maxsize
 import gc
 
+import copy
 
 class Node(object):
     # player es un entero 1 para humano -1 para maquina
@@ -45,8 +46,8 @@ class Node(object):
         if self.depth >= 0:
             for i in possibleMoves:
                 if (i == 1):
-                    nuevoNodo = Node(self.player, self.depth - 1, self.board, self.posXJ, self.posYJ,
-                                     self.puntosJH, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples)
+                    nuevoNodo = Node(self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
+                                     self.puntosJH, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples, self.value)
                     #m es una variable que identifica con 0 si el nodo no se movio
                     m = nuevoNodo.arribaDerecha()
 
@@ -56,9 +57,9 @@ class Node(object):
                     del nuevoNodo
                     gc.collect()
                 elif (i == 2):
-                    nuevoNodo = Node(self.player, self.depth - 1, self.board, self.posXJ, self.posYJ,
+                    nuevoNodo = Node(self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
                                      self.puntosJH, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples,
-                                    )
+                                     self.value)
 
                     m = nuevoNodo.arribaIzquierda()
                     if m != 0:
@@ -67,9 +68,9 @@ class Node(object):
                     del nuevoNodo
                     gc.collect()
                 elif (i == 3):
-                    nuevoNodo = Node(self.player, self.depth - 1, self.board, self.posXJ, self.posYJ,
+                    nuevoNodo = Node(self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
                                      self.puntosJH, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples,
-                                     )
+                                     self.value)
 
                     m = nuevoNodo.derechaArriba()
                     if m != 0:
@@ -78,9 +79,9 @@ class Node(object):
                     del nuevoNodo
                     gc.collect()
                 elif (i == 4):
-                    nuevoNodo = Node(self.player, self.depth - 1, self.board, self.posXJ, self.posYJ,
+                    nuevoNodo = Node(self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
                                      self.puntosJH, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples,
-                                     )
+                                     self.value)
 
                     m = nuevoNodo.derechaAbajo()
                     if m != 0:
@@ -89,9 +90,9 @@ class Node(object):
                     del nuevoNodo
                     gc.collect()
                 elif (i == 5):
-                    nuevoNodo = Node(self.player, self.depth - 1, self.board, self.posXJ, self.posYJ,
+                    nuevoNodo = Node(self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
                                      self.puntosJH, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples,
-                                     )
+                                     self.value)
 
                     m = nuevoNodo.abajoDerecha()
                     if m != 0:
@@ -100,9 +101,9 @@ class Node(object):
                     del nuevoNodo
                     gc.collect()
                 elif (i == 6):
-                    nuevoNodo = Node(self.player, self.depth - 1, self.board, self.posXJ, self.posYJ,
+                    nuevoNodo = Node(self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
                                      self.puntosJH, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples,
-                                     )
+                                     self.value)
 
                     m = nuevoNodo.abajoIzquierda()
                     if m != 0:
@@ -111,9 +112,9 @@ class Node(object):
                     del nuevoNodo
                     gc.collect()
                 elif (i == 7):
-                    nuevoNodo = Node(self.player, self.depth - 1, self.board, self.posXJ, self.posYJ,
+                    nuevoNodo = Node(self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
                                      self.puntosJH, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples,
-                                     )
+                                     self.value)
 
                     m = nuevoNodo.izquierdaArriba()
                     if m != 0:
@@ -122,9 +123,9 @@ class Node(object):
                     del nuevoNodo
                     gc.collect()
                 elif (i == 8):
-                    nuevoNodo = Node(self.player, self.depth - 1, self.board, self.posXJ, self.posYJ,
+                    nuevoNodo = Node(self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
                                      self.puntosJH, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples,
-                                     )
+                                     self.value)
 
                     m = nuevoNodo.izquierdaAbajo()
                     if m != 0:
@@ -357,19 +358,17 @@ class Node(object):
             return 0
 
 
-    def minimax(self, node, depth, player):
+def minimax(self, node, depth, player):
 
-        if (depth == 0 or abs(self.value) == maxsize):
-            return self.value
+    if (depth == 0 or abs(self.value) == maxsize):
+        return self.value
         
-        bestValue = maxsize * -player
+    bestValue = maxsize * -player
 
-        for i in range(len(self.children)):
-            child = self.children[i]
-            val = self.minimax(child, depth - 1, -player)
-            if (abs(maxsize * player - val) < abs(maxsize * player - bestValue)):
-                bestValue = val
-        return bestValue
-
-    
+    for i in range(len(self.children)):
+        child = self.children[i]
+        val = self.minimax(child, depth - 1, -player)
+        if (abs(maxsize * player - val) < abs(maxsize * player - bestValue)):
+            bestValue = val
+    return bestValue    
 
