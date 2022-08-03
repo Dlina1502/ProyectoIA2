@@ -26,7 +26,7 @@ class Node(object):
 
         self.value = value
         self.children = []
-        self.crateChildren()
+        self.createChildren()
 
     def getBoard(self):
         return self.board
@@ -40,7 +40,7 @@ class Node(object):
         return self.puntosJH - self.puntosJM
         
 
-    def crateChildren(self):
+    def createChildren(self):
         possibleMoves = [1, 2, 3, 4, 5, 6, 7, 8]
         if self.depth >= 0:
             for i in possibleMoves:
@@ -357,5 +357,19 @@ class Node(object):
             return 0
 
 
-def minimax():
-    pass
+    def minimax(self, node, depth, player):
+
+        if (depth == 0 or abs(self.value) == maxsize):
+            return self.value
+        
+        bestValue = maxsize * -player
+
+        for i in range(len(self.children)):
+            child = self.children[i]
+            val = self.minimax(child, depth - 1, -player)
+            if (abs(maxsize * player - val) < abs(maxsize * player - bestValue)):
+                bestValue = val
+        return bestValue
+
+    
+
