@@ -29,24 +29,41 @@ class Node(object):
         self.children = []
         self.createChildren()
 
+    def getRemaininGrass(self):
+        return self.remaininGrass
+
+
+    def getRemaininFlowers(self):
+        return self.remainingFlowers
+
+    def getRemaininApples(self):
+        return self.remainingApples
+
+    def getPuntosJM (self):
+        return self.puntosJM
+
+    def getPosXM(self):
+        return self.posXM
+    
+    def getPosYM(self):
+        return self.posYM
+
     def getBoard(self):
         return self.board
 
     def evaluar(self):
-        if (self.remaininGrass == 0 and self.remainingFlowers == 0 and self.remainingApples == 0):
-            if (self.puntosJH > self.puntosJM):
-                return maxsize
-            elif (self.puntosJM > self.puntosJH):
-                return -1 * maxsize
-        return self.puntosJH - self.puntosJM
+        if (self.player == 1):
+            return self.puntosJH - self.puntosJM
+        else:
+            return self.puntosJM - self.puntosJH
         
 
     def createChildren(self):
-        possibleMoves = [1, 2, 3, 4, 5, 6, 7, 8]
+        possibleMoves = [1, 2, 3, 4, 5, 6, 7, 8] #[1, 2, 3, 4, 5, 6, 7, 8]
         if self.depth >= 0:
             for i in possibleMoves:
                 if (i == 1):
-                    nuevoNodo = Node(self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
+                    nuevoNodo = Node(-self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
                                      self.puntosJH, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples, self.value)
                     #m es una variable que identifica con 0 si el nodo no se movio
                     m = nuevoNodo.arribaDerecha()
@@ -57,7 +74,7 @@ class Node(object):
                     del nuevoNodo
                     gc.collect()
                 elif (i == 2):
-                    nuevoNodo = Node(self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
+                    nuevoNodo = Node(-self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
                                      self.puntosJH, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples,
                                      self.value)
 
@@ -68,7 +85,7 @@ class Node(object):
                     del nuevoNodo
                     gc.collect()
                 elif (i == 3):
-                    nuevoNodo = Node(self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
+                    nuevoNodo = Node(-self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
                                      self.puntosJH, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples,
                                      self.value)
 
@@ -79,7 +96,7 @@ class Node(object):
                     del nuevoNodo
                     gc.collect()
                 elif (i == 4):
-                    nuevoNodo = Node(self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
+                    nuevoNodo = Node(-self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
                                      self.puntosJH, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples,
                                      self.value)
 
@@ -90,7 +107,7 @@ class Node(object):
                     del nuevoNodo
                     gc.collect()
                 elif (i == 5):
-                    nuevoNodo = Node(self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
+                    nuevoNodo = Node(-self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
                                      self.puntosJH, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples,
                                      self.value)
 
@@ -101,7 +118,7 @@ class Node(object):
                     del nuevoNodo
                     gc.collect()
                 elif (i == 6):
-                    nuevoNodo = Node(self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
+                    nuevoNodo = Node(-self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
                                      self.puntosJH, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples,
                                      self.value)
 
@@ -112,7 +129,7 @@ class Node(object):
                     del nuevoNodo
                     gc.collect()
                 elif (i == 7):
-                    nuevoNodo = Node(self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
+                    nuevoNodo = Node(-self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
                                      self.puntosJH, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples,
                                      self.value)
 
@@ -123,7 +140,7 @@ class Node(object):
                     del nuevoNodo
                     gc.collect()
                 elif (i == 8):
-                    nuevoNodo = Node(self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
+                    nuevoNodo = Node(-self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
                                      self.puntosJH, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples,
                                      self.value)
 
@@ -133,6 +150,8 @@ class Node(object):
 
                     del nuevoNodo
                     gc.collect()
+                
+                print("fila ", self.posXM, "columna ", self.posYM)
 
     def arribaDerecha(self):
         if (self.player == 1):
@@ -276,7 +295,7 @@ class Node(object):
 
     def izquierdaAbajo(self):
         if (self.player == 1):
-            if (self.posXJ+1 < 8 and self.posYJ-2 < 8 and self.posXJ-1 >= 0 and self.posYJ-2 >= 0):
+            if (self.posXJ+1 < 8 and self.posYJ-2 < 8 and self.posXJ+1 >= 0 and self.posYJ-2 >= 0):
                 auxX = self.posXJ+1
                 auxY = self.posYJ-2
                 m = self.validar_movimiento(auxX, auxY, self.posXJ, self.posYJ)
@@ -285,7 +304,7 @@ class Node(object):
             else:
                 return 0
         else:
-            if (self.posXM+1 < 8 and self.posYM+2 < 8 and self.posXM+1 >= 0 and self.posYM+2 >= 0):
+            if (self.posXM+1 < 8 and self.posYM-2 < 8 and self.posXM+1 >= 0 and self.posYM-2 >= 0):
                 auxX = self.posXM+1
                 auxY = self.posYM-2
                 m = self.validar_movimiento(auxX, auxY, self.posXM, self.posYM)
@@ -313,12 +332,15 @@ class Node(object):
                 self.board[x][y] = "jH"
                 self.posXJ = x
                 self.posYJ = y
+                self.remaininGrass -= 1
                 self.puntosJH = self.puntosJH + 1
             else:
                 self.board[x][y] = "jM"
                 self.posXM = x
                 self.posYM = y
+                self.remaininGrass -= 1
                 self.puntosJM = self.puntosJM + 1
+                print("pasto ", self.puntosJM)
 
             self.player = -self.player
             self.board[xAnt][yAnt] = "--"
@@ -330,11 +352,13 @@ class Node(object):
                 self.board[x][y] = "jH"
                 self.posXJ = x
                 self.posYJ = y
+                self.remainingFlowers -= 1
                 self.puntosJH = self.puntosJH + 3
             else:
                 self.board[x][y] = "jM"
                 self.posXM = x
                 self.posYM = y
+                self.remainingFlowers -= 1
                 self.puntosJM = self.puntosJM + 3
             self.player = -self.player
             self.board[xAnt][yAnt] = "--"
@@ -345,11 +369,13 @@ class Node(object):
                 self.board[x][y] = "jH"
                 self.posXJ = x
                 self.posYJ = y
+                self.remainingApples -= 1
                 self.puntosJH = self.puntosJH + 5
             else:
                 self.board[x][y] = "jM"
                 self.posXM = x
                 self.posYM = y
+                self.remainingApples -= 1
                 self.puntosJM = self.puntosJM + 5
             self.player = -self.player
             self.board[xAnt][yAnt] = "--"
@@ -358,17 +384,4 @@ class Node(object):
             return 0
 
 
-def minimax(self, node, depth, player):
-
-    if (depth == 0 or abs(self.value) == maxsize):
-        return self.value
-        
-    bestValue = maxsize * -player
-
-    for i in range(len(self.children)):
-        child = self.children[i]
-        val = self.minimax(child, depth - 1, -player)
-        if (abs(maxsize * player - val) < abs(maxsize * player - bestValue)):
-            bestValue = val
-    return bestValue    
 

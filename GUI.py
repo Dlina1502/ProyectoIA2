@@ -1,5 +1,6 @@
 from operator import truediv
 from pickle import TRUE
+from sys import maxsize
 from textwrap import fill
 import tkinter as tk
 from tkinter import Button, Canvas, Entry, Label, ttk
@@ -25,8 +26,12 @@ class App():
         self.anteriorXM = self.gs.xMaquina
         self.anteriorYM = self.gs.yMaquina
 
+        self.remainingGrass = self.gs.remainingGrass
+        self.remainingFlowers = self.gs.remainingFlowers
+        self.remainingApples = self.gs.remainingApples
+
         #print(self.posXJ2," / ", self.posYJ2)
-        self.turno = "JM"
+        self.turno = 1
 
         self.puntosJM = 0
         self.puntosJH = 0
@@ -50,6 +55,14 @@ class App():
 
     def moverJ2(self):
         pass
+
+    def winCheck(self):
+        if(self.remainingGrass == 0 and self.remainingFlowers==0 and self.remainingApples==0):
+            print("humano: ", self.puntosJH, " maquina: ", self.puntosJM)
+            return True
+        else:
+            print("humano: " , self.puntosJH , " maquina: " , self.puntosJM)
+            return False
 
     def elementosVentana(self):
         filaX = 0
@@ -103,9 +116,9 @@ class App():
 
     def setTurno(self, bool):
         if(bool):
-            turno = "JM"
+            turno = -1
         else:
-            turno = "JH"
+            turno = 1
 
         #self.movHumano()
 
@@ -118,7 +131,7 @@ class App():
         self.posYJ2 = self.filaY.get()
         
         #Movimiento 1
-        if (self.posXJ2<8 and self.posYJ2<8 and self.posXJ2>=0 and self.posYJ2 >= 0):
+        if (self.posXJ2<8 and self.posYJ2<8 and self.posXJ2>=0 and self.posYJ2 >= 0 and (not self.winCheck())):
             if(self.posYJ2 == self.anteriorYJ2+1 and self.posXJ2 == self.anteriorXJ2+2):
                 auxX = self.posXJ2
                 auxY = self.posYJ2
@@ -206,15 +219,58 @@ class App():
         else:
             print("error, es la casilla del otro jugador")
 
-        maquina = IA.Node(-1, 0, self.tablero[:], self.anteriorXJ2, self.anteriorYJ2, self.puntosJH ,self.anteriorXM, self.anteriorYM, self.puntosJM, 0, 0, 0, 0)
 
-        self.tablero = maquina.getBoard()
+        maquina = IA.Node(self.turno, 1, self.tablero[:], self.anteriorXJ2, self.anteriorYJ2, self.puntosJH ,self.anteriorXM, self.anteriorYM, self.puntosJM, self.remainingGrass,
+        self.remainingFlowers, self.remainingApples, 0)
+
+        bestChoice = -1000
+        i_bestValue = maxsize * -self.turno
+
+
+        for i in range(len(maquina.children)):
+            n_child = maquina.children[i]
+            i_val = self.minimax(n_child, 1, -self.turno)
+            if (abs(self.turno*maxsize - i_val) < abs(self.turno*maxsize-i_bestValue)):
+                i_bestValue = i_val
+                bestChoice = i
+                print("mejor opcion ", bestChoice)
+
+
+        self.tablero = maquina.children[bestChoice].getBoard()
+        self.remainingGrass = maquina.children[bestChoice].getRemaininGrass()
+        self.remainingFlowers = maquina.children[bestChoice].getRemaininFlowers()
+        self.remainingApples = maquina.children[bestChoice].getRemaininApples()
+
+        self.anteriorXM = maquina.children[bestChoice].getPosXM()
+        self.anteriorYM = maquina.children[bestChoice].getPosYM()
+
+        self.puntosJM = maquina.children[bestChoice].getPuntosJM()
+
+        print("valor escogido: ",maquina.children[bestChoice].value)
+
+        self.winCheck()
 
         print(x,y)
         print(self.tablero)
         self.interfaz.delete("all")
         self.dibujarTablero()
         self.mostrarPiezas(self.tablero)
+
+    
+    def minimax(self, node, depth, player):
+
+        if (depth == 0 or abs(node.value) == maxsize):
+            print("valor: ",node.value)
+            return node.value
+            
+        bestValue = maxsize * -player
+
+        for i in range(len(node.children)):
+            child = node.children[i]
+            val = self.minimax(child, depth - 1, -player)
+            if (abs(maxsize * player - val) < abs(maxsize * player - bestValue)):
+                bestValue = val
+        return bestValue    
 
 
 

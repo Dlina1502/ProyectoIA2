@@ -7,6 +7,10 @@ class GameState():
         self.xMaquina = 0
         self.yMaquina = 0
 
+        self.remainingGrass = 14
+        self.remainingFlowers = 5
+        self.remainingApples = 2
+
         self.posX = 0
         self.posY = 0
 
@@ -21,13 +25,13 @@ class GameState():
         ["--", "--", "--", "--", "--", "--", "--", "--"]
         ]
 
-        for i in range (14):
+        for i in range (self.remainingGrass):
             GameState.posElementoP(self)
         
-        for i in range (5):
+        for i in range (self.remainingFlowers):
             GameState.posElementoF(self)
         
-        for i in range (2):
+        for i in range (self.remainingApples):
             GameState.posElementoM(self)
 
         GameState.posJugadorH(self)
