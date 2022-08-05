@@ -1,5 +1,5 @@
+import copy
 from operator import truediv
-from pickle import TRUE
 from sys import maxsize
 from textwrap import fill
 import tkinter as tk
@@ -220,22 +220,12 @@ class App():
             print("error, es la casilla del otro jugador")
 
 
-        maquina = IA.Node(self.turno, 1, self.tablero[:], self.anteriorXJ2, self.anteriorYJ2, self.puntosJH ,self.anteriorXM, self.anteriorYM, self.puntosJM, self.remainingGrass,
+        maquina = IA.Node(self.turno, 5, self.tablero[:], self.anteriorXJ2, self.anteriorYJ2, self.puntosJH ,self.anteriorXM, self.anteriorYM, self.puntosJM, self.remainingGrass,
         self.remainingFlowers, self.remainingApples, 0)
 
-        bestChoice = -1000
-        i_bestValue = maxsize * -self.turno
+        
 
-
-        for i in range(len(maquina.children)):
-            n_child = maquina.children[i]
-            i_val = self.minimax(n_child, 1, -self.turno)
-            if (abs(self.turno*maxsize - i_val) < abs(self.turno*maxsize-i_bestValue)):
-                i_bestValue = i_val
-                bestChoice = i
-                print("mejor opcion ", bestChoice)
-
-
+        bestChoice, bestValue = self.minimax(maquina, 5, -self.turno)
         self.tablero = maquina.children[bestChoice].getBoard()
         self.remainingGrass = maquina.children[bestChoice].getRemaininGrass()
         self.remainingFlowers = maquina.children[bestChoice].getRemaininFlowers()
@@ -246,7 +236,6 @@ class App():
 
         self.puntosJM = maquina.children[bestChoice].getPuntosJM()
 
-        print("valor escogido: ",maquina.children[bestChoice].value)
 
         self.winCheck()
 
@@ -260,17 +249,30 @@ class App():
     def minimax(self, node, depth, player):
 
         if (depth == 0 or abs(node.value) == maxsize):
-            print("valor: ",node.value)
-            return node.value
-            
-        bestValue = maxsize * -player
+            return None ,node.value
 
-        for i in range(len(node.children)):
-            child = node.children[i]
-            val = self.minimax(child, depth - 1, -player)
-            if (abs(maxsize * player - val) < abs(maxsize * player - bestValue)):
-                bestValue = val
-        return bestValue    
+        bestChoice = -1000
+        
+        if (player == -1):
+            maxValue = -maxsize
+            for i in range(len(node.children)):
+                child = node.children[i]
+                val = self.minimax(child, depth - 1, -player)[1]
+                if (val > maxValue):
+                    maxValue = val
+                    bestChoice = copy.deepcopy(i)
+            return bestChoice, maxValue
+        else:
+            minValue = maxsize
+            for i in range(len(node.children)):
+                child = node.children[i]
+                val = self.minimax(child, depth - 1, -player)[1]
+                if (val < minValue):
+                    minValue = val
+                    bestChoice = copy.deepcopy(i)
+            return bestChoice, minValue
+
+
 
 
 

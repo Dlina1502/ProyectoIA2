@@ -1,3 +1,4 @@
+from platform import node
 import random
 from math import inf
 
@@ -5,6 +6,7 @@ from sys import maxsize
 import gc
 
 import copy
+from typing_extensions import Self
 
 class Node(object):
     # player es un entero 1 para humano -1 para maquina
@@ -25,7 +27,7 @@ class Node(object):
         self.remainingFlowers = remainingFlowers
         self.remainingApples = remainingApples
 
-        self.value = value
+        self.value = self.evaluar()
         self.children = []
         self.createChildren()
 
@@ -52,10 +54,12 @@ class Node(object):
         return self.board
 
     def evaluar(self):
-        if (self.player == 1):
-            return self.puntosJH - self.puntosJM
-        else:
-            return self.puntosJM - self.puntosJH
+        return self.puntosJM - self.puntosJH
+        # if (self.player == 1):
+        #     return self.puntosJH - self.puntosJM
+        # else: 
+        #     return self.puntosJM - self.puntosJH
+            
         
 
     def createChildren(self):
@@ -63,323 +67,266 @@ class Node(object):
         if self.depth >= 0:
             for i in possibleMoves:
                 if (i == 1):
-                    nuevoNodo = Node(-self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
-                                     self.puntosJH, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples, self.value)
+                    
+                    aux = self.player * (-1)
                     #m es una variable que identifica con 0 si el nodo no se movio
-                    m = nuevoNodo.arribaDerecha()
+                    
+                    m = self.arribaDerecha(aux)
 
-                    if m != 0:
-                        self.children.append(nuevoNodo)
-
-                    del nuevoNodo
-                    gc.collect()
                 elif (i == 2):
-                    nuevoNodo = Node(-self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
-                                     self.puntosJH, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples,
-                                     self.value)
-
-                    m = nuevoNodo.arribaIzquierda()
-                    if m != 0:
-                        self.children.append(nuevoNodo)
-
-                    del nuevoNodo
-                    gc.collect()
+                    
+                    aux = self.player * (-1)
+                   
+                    m = self.arribaIzquierda(aux)
+                    
                 elif (i == 3):
-                    nuevoNodo = Node(-self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
-                                     self.puntosJH, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples,
-                                     self.value)
 
-                    m = nuevoNodo.derechaArriba()
-                    if m != 0:
-                        self.children.append(nuevoNodo)
+                    aux = self.player * (-1)
+                    
+                    m = self.derechaArriba(aux)
+                    
 
-                    del nuevoNodo
-                    gc.collect()
+                    
                 elif (i == 4):
-                    nuevoNodo = Node(-self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
-                                     self.puntosJH, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples,
-                                     self.value)
+                    aux = self.player * (-1)
+                    
+                    m = self.derechaAbajo(aux)
+                    
 
-                    m = nuevoNodo.derechaAbajo()
-                    if m != 0:
-                        self.children.append(nuevoNodo)
-
-                    del nuevoNodo
-                    gc.collect()
+                    
                 elif (i == 5):
-                    nuevoNodo = Node(-self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
-                                     self.puntosJH, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples,
-                                     self.value)
+                    aux = self.player * (-1)
+                    
+                    m = self.abajoDerecha(aux)
 
-                    m = nuevoNodo.abajoDerecha()
-                    if m != 0:
-                        self.children.append(nuevoNodo)
-
-                    del nuevoNodo
-                    gc.collect()
                 elif (i == 6):
-                    nuevoNodo = Node(-self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
-                                     self.puntosJH, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples,
-                                     self.value)
-
-                    m = nuevoNodo.abajoIzquierda()
-                    if m != 0:
-                        self.children.append(nuevoNodo)
-
-                    del nuevoNodo
-                    gc.collect()
+                    aux = self.player * (-1)
+                    
+                    m = self.abajoIzquierda(aux)
+    
                 elif (i == 7):
-                    nuevoNodo = Node(-self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
-                                     self.puntosJH, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples,
-                                     self.value)
-
-                    m = nuevoNodo.izquierdaArriba()
-                    if m != 0:
-                        self.children.append(nuevoNodo)
-
-                    del nuevoNodo
-                    gc.collect()
+                    aux = self.player *(-1)
+                    
+                    m = self.izquierdaArriba(aux)
                 elif (i == 8):
-                    nuevoNodo = Node(-self.player, self.depth - 1, copy.deepcopy(self.board), self.posXJ, self.posYJ,
-                                     self.puntosJH, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples,
-                                     self.value)
-
-                    m = nuevoNodo.izquierdaAbajo()
-                    if m != 0:
-                        self.children.append(nuevoNodo)
-
-                    del nuevoNodo
-                    gc.collect()
+                    aux = self.player * (-1)
+                    
+                    m = self.izquierdaAbajo(aux)
+                    
                 
-                print("fila ", self.posXM, "columna ", self.posYM)
+                
 
-    def arribaDerecha(self):
-        if (self.player == 1):
+    def arribaDerecha(self, aux):
+        if (aux == 1):
             if (self.posXJ-2 < 8 and self.posYJ+1 < 8 and self.posXJ-2 >= 0 and self.posYJ+1 >= 0):
+                
+                
                 auxX = self.posXJ-2
                 auxY = self.posYJ+1
-                m = self.validar_movimiento(auxX, auxY, self.posXJ, self.posYJ)
-                print(auxX, " / ", auxY)
-                return m
+                self.validar_movimiento(auxX, auxY, self.posXJ, self.posYJ)
+                
             else:
                 return 0
         else:
             if (self.posXM-2 < 8 and self.posYM+1 < 8 and self.posXM-2 >= 0 and self.posYM+1 >= 0):
                 auxX = self.posXM-2
                 auxY = self.posYM+1
-                m = self.validar_movimiento(auxX, auxY, self.posXM, self.posYM)
-                print(auxX, " / ", auxY)
-                return m
+
+                print("maquina: ", auxX, " / " , auxY)
+                self.validar_movimiento(auxX, auxY, self.posXM, self.posYM)
             else:
                 return 0
 
-    def arribaIzquierda(self):
-        if (self.player == 1):
+    def arribaIzquierda(self, aux):
+        if (aux == 1):
+            
             if (self.posXJ-2 < 8 and self.posYJ-1 < 8 and self.posXJ-2 >= 0 and self.posYJ-1 >= 0):
                 auxX = self.posXJ-2
                 auxY = self.posYJ-1
-                m = self.validar_movimiento(auxX, auxY, self.posXJ, self.posYJ)
-                print(auxX, " / ", auxY)
-                return m
+                self.validar_movimiento(auxX, auxY, self.posXJ, self.posYJ)
             else:
                 return 0
         else:
             if (self.posXM-2 < 8 and self.posYM-1 < 8 and self.posXM-2 >= 0 and self.posYM-1 >= 0):
                 auxX = self.posXM-2
                 auxY = self.posYM-1
-                m = self.validar_movimiento(auxX, auxY, self.posXM, self.posYM)
-                print(auxX, " / ", auxY)
-                return m
+                print("maquina: ", auxX, " / " , auxY)
+                self.validar_movimiento(auxX, auxY, self.posXM, self.posYM)
             else:
                 return 0
 
-    def derechaArriba(self):
-        if (self.player == 1):
-            if (self.posXJ+1 < 8 and self.posYJ+2 < 8 and self.posXJ+1 >= 0 and self.posYJ+2 >= 0):
-                auxX = self.posXJ+1
-                auxY = self.posYJ+2
-                m = self.validar_movimiento(auxX, auxY, self.posXJ, self.posYJ)
-                print(auxX, " / ", auxY)
-                return m
-            else:
-                return 0
-        else:
-            if (self.posXM+1 < 8 and self.posYM+2 < 8 and self.posXM+1 >= 0 and self.posYM+2 >= 0):
-                auxX = self.posXM+1
-                auxY = self.posYM+2
-                m = self.validar_movimiento(auxX, auxY, self.posXM, self.posYM)
-                print(auxX, " / ", auxY)
-                return m
-            else:
-                return 0
-
-    def derechaAbajo(self):
-        if (self.player == 1):
+    def derechaArriba(self, aux):
+        if (aux == 1):
             if (self.posXJ-1 < 8 and self.posYJ+2 < 8 and self.posXJ-1 >= 0 and self.posYJ+2 >= 0):
                 auxX = self.posXJ-1
                 auxY = self.posYJ+2
-                m = self.validar_movimiento(auxX, auxY, self.posXJ, self.posYJ)
-                print(auxX, " / ", auxY)
-                return m
+                self.validar_movimiento(auxX, auxY, self.posXJ, self.posYJ)
             else:
                 return 0
         else:
             if (self.posXM-1 < 8 and self.posYM+2 < 8 and self.posXM-1 >= 0 and self.posYM+2 >= 0):
                 auxX = self.posXM-1
                 auxY = self.posYM+2
-                m = self.validar_movimiento(auxX, auxY, self.posXM, self.posYM)
-                print(auxX, " / ", auxY)
-                return m
+                print("maquina: ", auxX, " / " , auxY)
+                self.validar_movimiento(auxX, auxY, self.posXM, self.posYM)
             else:
                 return 0
 
-    def abajoDerecha(self):
-        if (self.player == 1):
+    def derechaAbajo(self, aux):
+        if (aux == 1):
+            if (self.posXJ+1 < 8 and self.posYJ+2 < 8 and self.posXJ+1 >= 0 and self.posYJ+2 >= 0):
+                auxX = self.posXJ+1
+                auxY = self.posYJ+2
+                self.validar_movimiento(auxX, auxY, self.posXJ, self.posYJ)
+            else:
+                return 0
+        else:
+            if (self.posXM+1 < 8 and self.posYM+2 < 8 and self.posXM+1 >= 0 and self.posYM+2 >= 0):
+                auxX = self.posXM+1
+                auxY = self.posYM+2
+                print("maquina: ", auxX, " / " , auxY)
+                self.validar_movimiento(auxX, auxY, self.posXM, self.posYM)
+            else:
+                return 0
+
+    def abajoDerecha(self, aux):
+        if (aux == 1):
             if (self.posXJ+2 < 8 and self.posYJ+1 < 8 and self.posXJ+2 >= 0 and self.posYJ+1 >= 0):
                 auxX = self.posXJ+2
                 auxY = self.posYJ+1
-                m = self.validar_movimiento(auxX, auxY, self.posXJ, self.posYJ)
-                print(auxX, " / ", auxY)
-                return m
+                self.validar_movimiento(auxX, auxY, self.posXJ, self.posYJ)
             else:
                 return 0
         else:
             if (self.posXM+2 < 8 and self.posYM+1 < 8 and self.posXM+2 >= 0 and self.posYM+1 >= 0):
                 auxX = self.posXM+2
                 auxY = self.posYM+1
-                m = self.validar_movimiento(auxX, auxY, self.posXM, self.posYM)
-                print(auxX, " / ", auxY)
-                return m
+                print("maquina: ", auxX, " / " , auxY)
+                self.validar_movimiento(auxX, auxY, self.posXM, self.posYM)
             else:
                 return 0
 
-    def abajoIzquierda(self):
-        if (self.player == 1):
+    def abajoIzquierda(self, aux):
+        if (aux == 1):
             if (self.posXJ+2 < 8 and self.posYJ-1 < 8 and self.posXJ+2 >= 0 and self.posYJ-1 >= 0):
                 auxX = self.posXJ+2
                 auxY = self.posYJ-1
-                m = self.validar_movimiento(auxX, auxY, self.posXJ, self.posYJ)
-                print(auxX, " / ", auxY)
-                return m
+                self.validar_movimiento(auxX, auxY, self.posXJ, self.posYJ)
             else:
                 return 0
         else:
             if (self.posXM+2 < 8 and self.posYM-1 < 8 and self.posXM+2 >= 0 and self.posYM-1 >= 0):
                 auxX = self.posXM+2
                 auxY = self.posYM-1
-                m = self.validar_movimiento(auxX, auxY, self.posXM, self.posYM)
-                print(auxX, " / ", auxY)
-                return m
+                print("maquina: ", auxX, " / " , auxY)
+                self.validar_movimiento(auxX, auxY, self.posXM, self.posYM)
             else:
                 return 0
 
-    def izquierdaArriba(self):
-        if (self.player == 1):
+    def izquierdaArriba(self, aux):
+        if (aux == 1):
             if (self.posXJ-1 < 8 and self.posYJ-2 < 8 and self.posXJ-1 >= 0 and self.posYJ-2 >= 0):
                 auxX = self.posXJ-1
                 auxY = self.posYJ-2
-                m = self.validar_movimiento(auxX, auxY, self.posXJ, self.posYJ)
-                print(auxX, " / ", auxY)
-                return m
+                print("maquina: ", auxX, " / " , auxY)
+                self.validar_movimiento(auxX, auxY, self.posXJ, self.posYJ)
             else:
                 return 0
         else:
             if (self.posXM-1 < 8 and self.posYM-2 < 8 and self.posXM-1 >= 0 and self.posYM-2 >= 0):
                 auxX = self.posXM-1
                 auxY = self.posYM-2
-                m = self.validar_movimiento(auxX, auxY, self.posXM, self.posYM)
-                print(auxX, " / ", auxY)
-                return m
+                print("maquina: ", auxX, " / " , auxY)
+                self.validar_movimiento(auxX, auxY, self.posXM, self.posYM)
             else:
                 return 0
 
-    def izquierdaAbajo(self):
-        if (self.player == 1):
-            if (self.posXJ+1 < 8 and self.posYJ-2 < 8 and self.posXJ+1 >= 0 and self.posYJ-2 >= 0):
+    def izquierdaAbajo(self, aux):
+        if (aux == 1):
+            if (self.posXJ+1 < 8 and self.posYJ-2 < 8 and self.posXJ+1 >= 0 and self.posYJ-2 >= 0):               
                 auxX = self.posXJ+1
                 auxY = self.posYJ-2
-                m = self.validar_movimiento(auxX, auxY, self.posXJ, self.posYJ)
-                print(auxX, " / ", auxY)
-                return m
+                print("maquina: ", auxX, " / " , auxY)
+                self.validar_movimiento(auxX, auxY, self.posXJ, self.posYJ)
             else:
                 return 0
         else:
             if (self.posXM+1 < 8 and self.posYM-2 < 8 and self.posXM+1 >= 0 and self.posYM-2 >= 0):
                 auxX = self.posXM+1
                 auxY = self.posYM-2
-                m = self.validar_movimiento(auxX, auxY, self.posXM, self.posYM)
-                print(auxX, " / ", auxY)
-                return m
+                print("maquina: ", auxX, " / " , auxY)
+                self.validar_movimiento(auxX, auxY, self.posXM, self.posYM)
             else:
                 return 0
 
-    def validar_movimiento(self, x, y, xAnt, yAnt):
-        if (self.board[x][y] == "--"):
-            if self.player == 1:
-                self.board[x][y] = "jH"
-                self.posXJ = x
-                self.posYJ = y
+    def validar_movimiento(self, x, y, antX, antY):
+        copyBoard = copy.deepcopy(self.board)
+        if (copyBoard[x][y] == "--"):
+            if -self.player == 1:
+                copyBoard[x][y] = "jH"
+                copyBoard[antX][antY] = "--"
+
+                nuevoNodo = Node(self.player, self.depth - 1, copyBoard, x, y,
+                                     self.puntosJH, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples, self.value)
+                self.children.append(nuevoNodo)
+            
             else:
-                self.board[x][y] = "jM"
-                self.posXM = x
-                self.posYM = y
-            self.player = -self.player
-            self.board[xAnt][yAnt] = "--"
-            self.value = self.evaluar()
+                copyBoard[x][y] = "jM"
+                copyBoard[antX][antY] = "--"
+                nuevoNodo = Node(self.player, self.depth - 1, copyBoard, self.posXJ, self.posYJ,
+                                     self.puntosJH, x, y, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples, self.value)
+                self.children.append(nuevoNodo)
 
-        elif (self.board[x][y] == "p"):
-            if self.player == 1:
-                self.board[x][y] = "jH"
-                self.posXJ = x
-                self.posYJ = y
-                self.remaininGrass -= 1
-                self.puntosJH = self.puntosJH + 1
+
+        elif (copyBoard[x][y] == "p"):
+            if -self.player == 1:
+                copyBoard[x][y] = "jH"
+                copyBoard[antX][antY] = "--"
+                nuevoNodo = Node(self.player, self.depth - 1, copyBoard, x, y,
+                                     self.puntosJH + 1, self.posXM, self.posYM, self.puntosJM, self.remaininGrass - 1, self.remainingFlowers, self.remainingApples, self.value)
+                self.children.append(nuevoNodo)
+
             else:
-                self.board[x][y] = "jM"
-                self.posXM = x
-                self.posYM = y
-                self.remaininGrass -= 1
-                self.puntosJM = self.puntosJM + 1
-                print("pasto ", self.puntosJM)
+                copyBoard[x][y] = "jM"
+                copyBoard[antX][antY] = "--"
+                nuevoNodo = Node(self.player, self.depth - 1, copyBoard, self.posXJ, self.posYJ,
+                                     self.puntosJH, x, y, self.puntosJM + 1, self.remaininGrass - 1, self.remainingFlowers, self.remainingApples, self.value)
+                self.children.append(nuevoNodo)
 
-            self.player = -self.player
-            self.board[xAnt][yAnt] = "--"
-            self.value = self.evaluar()
+            
 
-        elif (self.board[x][y] == "f"):
 
-            if self.player == 1:
-                self.board[x][y] = "jH"
-                self.posXJ = x
-                self.posYJ = y
-                self.remainingFlowers -= 1
-                self.puntosJH = self.puntosJH + 3
+        elif (copyBoard[x][y] == "f"):
+
+            if -self.player == 1:
+                copyBoard[x][y] = "jH"
+                copyBoard[antX][antY] = "--"
+                nuevoNodo = Node(self.player, self.depth - 1, copyBoard, x, y,
+                                     self.puntosJH + 3, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers - 1, self.remainingApples, self.value)
+                self.children.append(nuevoNodo)
+
             else:
-                self.board[x][y] = "jM"
-                self.posXM = x
-                self.posYM = y
-                self.remainingFlowers -= 1
-                self.puntosJM = self.puntosJM + 3
-            self.player = -self.player
-            self.board[xAnt][yAnt] = "--"
-            self.value = self.evaluar()
+                copyBoard[x][y] = "jM"
+                copyBoard[antX][antY] = "--"
+                nuevoNodo = Node(self.player, self.depth - 1, copyBoard, self.posXJ, self.posYJ,
+                                     self.puntosJH, x, y, self.puntosJM + 3, self.remaininGrass, self.remainingFlowers - 1, self.remainingApples, self.value) 
+                self.children.append(nuevoNodo)           
+            
 
-        elif (self.board[x][y] == "m"):
-            if self.player == 1:
-                self.board[x][y] = "jH"
-                self.posXJ = x
-                self.posYJ = y
-                self.remainingApples -= 1
-                self.puntosJH = self.puntosJH + 5
+        elif (copyBoard[x][y] == "m"):
+            if -self.player == 1:
+                copyBoard[x][y] = "jH"
+                copyBoard[antX][antY] = "--"
+                nuevoNodo = Node(self.player, self.depth - 1, copyBoard, x, y,
+                                     self.puntosJH + 5, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples - 1, self.value)
+                self.children.append(nuevoNodo)
             else:
-                self.board[x][y] = "jM"
-                self.posXM = x
-                self.posYM = y
-                self.remainingApples -= 1
-                self.puntosJM = self.puntosJM + 5
-            self.player = -self.player
-            self.board[xAnt][yAnt] = "--"
-            self.value = self.evaluar()
+                copyBoard[x][y] = "jM"
+                copyBoard[antX][antY] = "--"
+                nuevoNodo = Node(self.player, self.depth - 1, copyBoard, self.posXJ, self.posYJ,
+                                     self.puntosJH, x, y, self.puntosJM + 5, self.remaininGrass, self.remainingFlowers, self.remainingApples - 1, self.value)
+                self.children.append(nuevoNodo)
+
         else:
             return 0
 
