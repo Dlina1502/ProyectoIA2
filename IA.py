@@ -11,6 +11,7 @@ from typing_extensions import Self
 class Node(object):
     # player es un entero 1 para humano -1 para maquina
     def __init__(self, player, depth, board, posXJ, posYJ, puntosJH, posXM, posYM, puntosJM, remainingGrass, remainingFlowers, remainingApples, value):
+        
         self.player = player
         self.depth = depth
 
@@ -27,7 +28,8 @@ class Node(object):
         self.remainingFlowers = remainingFlowers
         self.remainingApples = remainingApples
 
-        self.value = self.evaluar()
+        self.value = self.evaluar(self.depth)
+        print("profundidad: ", depth, " heuristica: ", self.value)
         self.children = []
         self.createChildren()
 
@@ -53,18 +55,17 @@ class Node(object):
     def getBoard(self):
         return self.board
 
-    def evaluar(self):
-        return self.puntosJM - self.puntosJH
-        # if (self.player == 1):
-        #     return self.puntosJH - self.puntosJM
-        # else: 
-        #     return self.puntosJM - self.puntosJH
+    def evaluar(self, primermov):
+        if primermov:
+            return self.puntosJM*10 - self.puntosJH
+        else:
+            return self.puntosJM - self.puntosJH
             
         
 
     def createChildren(self):
         possibleMoves = [1, 2, 3, 4, 5, 6, 7, 8] #[1, 2, 3, 4, 5, 6, 7, 8]
-        if self.depth >= 0:
+        if self.depth > 0:
             for i in possibleMoves:
                 if (i == 1):
                     
@@ -131,8 +132,6 @@ class Node(object):
             if (self.posXM-2 < 8 and self.posYM+1 < 8 and self.posXM-2 >= 0 and self.posYM+1 >= 0):
                 auxX = self.posXM-2
                 auxY = self.posYM+1
-
-                print("maquina: ", auxX, " / " , auxY)
                 self.validar_movimiento(auxX, auxY, self.posXM, self.posYM)
             else:
                 return 0
@@ -150,7 +149,6 @@ class Node(object):
             if (self.posXM-2 < 8 and self.posYM-1 < 8 and self.posXM-2 >= 0 and self.posYM-1 >= 0):
                 auxX = self.posXM-2
                 auxY = self.posYM-1
-                print("maquina: ", auxX, " / " , auxY)
                 self.validar_movimiento(auxX, auxY, self.posXM, self.posYM)
             else:
                 return 0
@@ -167,7 +165,6 @@ class Node(object):
             if (self.posXM-1 < 8 and self.posYM+2 < 8 and self.posXM-1 >= 0 and self.posYM+2 >= 0):
                 auxX = self.posXM-1
                 auxY = self.posYM+2
-                print("maquina: ", auxX, " / " , auxY)
                 self.validar_movimiento(auxX, auxY, self.posXM, self.posYM)
             else:
                 return 0
@@ -184,7 +181,6 @@ class Node(object):
             if (self.posXM+1 < 8 and self.posYM+2 < 8 and self.posXM+1 >= 0 and self.posYM+2 >= 0):
                 auxX = self.posXM+1
                 auxY = self.posYM+2
-                print("maquina: ", auxX, " / " , auxY)
                 self.validar_movimiento(auxX, auxY, self.posXM, self.posYM)
             else:
                 return 0
@@ -201,7 +197,6 @@ class Node(object):
             if (self.posXM+2 < 8 and self.posYM+1 < 8 and self.posXM+2 >= 0 and self.posYM+1 >= 0):
                 auxX = self.posXM+2
                 auxY = self.posYM+1
-                print("maquina: ", auxX, " / " , auxY)
                 self.validar_movimiento(auxX, auxY, self.posXM, self.posYM)
             else:
                 return 0
@@ -218,7 +213,6 @@ class Node(object):
             if (self.posXM+2 < 8 and self.posYM-1 < 8 and self.posXM+2 >= 0 and self.posYM-1 >= 0):
                 auxX = self.posXM+2
                 auxY = self.posYM-1
-                print("maquina: ", auxX, " / " , auxY)
                 self.validar_movimiento(auxX, auxY, self.posXM, self.posYM)
             else:
                 return 0
@@ -228,7 +222,6 @@ class Node(object):
             if (self.posXJ-1 < 8 and self.posYJ-2 < 8 and self.posXJ-1 >= 0 and self.posYJ-2 >= 0):
                 auxX = self.posXJ-1
                 auxY = self.posYJ-2
-                print("maquina: ", auxX, " / " , auxY)
                 self.validar_movimiento(auxX, auxY, self.posXJ, self.posYJ)
             else:
                 return 0
@@ -236,7 +229,6 @@ class Node(object):
             if (self.posXM-1 < 8 and self.posYM-2 < 8 and self.posXM-1 >= 0 and self.posYM-2 >= 0):
                 auxX = self.posXM-1
                 auxY = self.posYM-2
-                print("maquina: ", auxX, " / " , auxY)
                 self.validar_movimiento(auxX, auxY, self.posXM, self.posYM)
             else:
                 return 0
@@ -246,7 +238,6 @@ class Node(object):
             if (self.posXJ+1 < 8 and self.posYJ-2 < 8 and self.posXJ+1 >= 0 and self.posYJ-2 >= 0):               
                 auxX = self.posXJ+1
                 auxY = self.posYJ-2
-                print("maquina: ", auxX, " / " , auxY)
                 self.validar_movimiento(auxX, auxY, self.posXJ, self.posYJ)
             else:
                 return 0
@@ -254,7 +245,6 @@ class Node(object):
             if (self.posXM+1 < 8 and self.posYM-2 < 8 and self.posXM+1 >= 0 and self.posYM-2 >= 0):
                 auxX = self.posXM+1
                 auxY = self.posYM-2
-                print("maquina: ", auxX, " / " , auxY)
                 self.validar_movimiento(auxX, auxY, self.posXM, self.posYM)
             else:
                 return 0
@@ -266,14 +256,14 @@ class Node(object):
                 copyBoard[x][y] = "jH"
                 copyBoard[antX][antY] = "--"
 
-                nuevoNodo = Node(self.player, self.depth - 1, copyBoard, x, y,
+                nuevoNodo = Node(-self.player, self.depth - 1, copyBoard, x, y,
                                      self.puntosJH, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples, self.value)
                 self.children.append(nuevoNodo)
             
             else:
                 copyBoard[x][y] = "jM"
                 copyBoard[antX][antY] = "--"
-                nuevoNodo = Node(self.player, self.depth - 1, copyBoard, self.posXJ, self.posYJ,
+                nuevoNodo = Node(-self.player, self.depth - 1, copyBoard, self.posXJ, self.posYJ,
                                      self.puntosJH, x, y, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples, self.value)
                 self.children.append(nuevoNodo)
 
@@ -282,14 +272,14 @@ class Node(object):
             if -self.player == 1:
                 copyBoard[x][y] = "jH"
                 copyBoard[antX][antY] = "--"
-                nuevoNodo = Node(self.player, self.depth - 1, copyBoard, x, y,
+                nuevoNodo = Node(-self.player, self.depth - 1, copyBoard, x, y,
                                      self.puntosJH + 1, self.posXM, self.posYM, self.puntosJM, self.remaininGrass - 1, self.remainingFlowers, self.remainingApples, self.value)
                 self.children.append(nuevoNodo)
 
             else:
                 copyBoard[x][y] = "jM"
                 copyBoard[antX][antY] = "--"
-                nuevoNodo = Node(self.player, self.depth - 1, copyBoard, self.posXJ, self.posYJ,
+                nuevoNodo = Node(-self.player, self.depth - 1, copyBoard, self.posXJ, self.posYJ,
                                      self.puntosJH, x, y, self.puntosJM + 1, self.remaininGrass - 1, self.remainingFlowers, self.remainingApples, self.value)
                 self.children.append(nuevoNodo)
 
@@ -301,14 +291,14 @@ class Node(object):
             if -self.player == 1:
                 copyBoard[x][y] = "jH"
                 copyBoard[antX][antY] = "--"
-                nuevoNodo = Node(self.player, self.depth - 1, copyBoard, x, y,
+                nuevoNodo = Node(-self.player, self.depth - 1, copyBoard, x, y,
                                      self.puntosJH + 3, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers - 1, self.remainingApples, self.value)
                 self.children.append(nuevoNodo)
 
             else:
                 copyBoard[x][y] = "jM"
                 copyBoard[antX][antY] = "--"
-                nuevoNodo = Node(self.player, self.depth - 1, copyBoard, self.posXJ, self.posYJ,
+                nuevoNodo = Node(-self.player, self.depth - 1, copyBoard, self.posXJ, self.posYJ,
                                      self.puntosJH, x, y, self.puntosJM + 3, self.remaininGrass, self.remainingFlowers - 1, self.remainingApples, self.value) 
                 self.children.append(nuevoNodo)           
             
@@ -317,13 +307,13 @@ class Node(object):
             if -self.player == 1:
                 copyBoard[x][y] = "jH"
                 copyBoard[antX][antY] = "--"
-                nuevoNodo = Node(self.player, self.depth - 1, copyBoard, x, y,
+                nuevoNodo = Node(-self.player, self.depth - 1, copyBoard, x, y,
                                      self.puntosJH + 5, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples - 1, self.value)
                 self.children.append(nuevoNodo)
             else:
                 copyBoard[x][y] = "jM"
                 copyBoard[antX][antY] = "--"
-                nuevoNodo = Node(self.player, self.depth - 1, copyBoard, self.posXJ, self.posYJ,
+                nuevoNodo = Node(-self.player, self.depth - 1, copyBoard, self.posXJ, self.posYJ,
                                      self.puntosJH, x, y, self.puntosJM + 5, self.remaininGrass, self.remainingFlowers, self.remainingApples - 1, self.value)
                 self.children.append(nuevoNodo)
 

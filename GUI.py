@@ -226,6 +226,7 @@ class App():
         
 
         bestChoice, bestValue = self.minimax(maquina, 5, -self.turno)
+        print("mejor valor: ", bestValue)
         self.tablero = maquina.children[bestChoice].getBoard()
         self.remainingGrass = maquina.children[bestChoice].getRemaininGrass()
         self.remainingFlowers = maquina.children[bestChoice].getRemaininFlowers()
@@ -258,6 +259,7 @@ class App():
             for i in range(len(node.children)):
                 child = node.children[i]
                 val = self.minimax(child, depth - 1, -player)[1]
+                print("profundidad: ", depth, " valor maximo: ", val)
                 if (val > maxValue):
                     maxValue = val
                     bestChoice = copy.deepcopy(i)
@@ -267,6 +269,7 @@ class App():
             for i in range(len(node.children)):
                 child = node.children[i]
                 val = self.minimax(child, depth - 1, -player)[1]
+                print("profundidad: ", depth, " valor minimo: ", val)
                 if (val < minValue):
                     minValue = val
                     bestChoice = copy.deepcopy(i)
