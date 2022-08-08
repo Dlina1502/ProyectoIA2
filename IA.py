@@ -10,15 +10,18 @@ from typing_extensions import Self
 
 class Node(object):
     # player es un entero 1 para humano -1 para maquina
-    def __init__(self, player, depth, board, posXJ, posYJ, puntosJH, posXM, posYM, puntosJM, remainingGrass, remainingFlowers, remainingApples, value):
+    def __init__(self, player, depth, board, posXJ, posYJ, puntosJH, posXM, posYM, puntosJM, remainingGrass, remainingFlowers, remainingApples, value, primerMov):
         
         self.player = player
         self.depth = depth
+        self.depthIni = depth
 
         self.board = board
         self.posXJ = posXJ
         self.posYJ = posYJ
         self.puntosJH = puntosJH
+
+        self.primerMov = primerMov
 
         self.posXM = posXM
         self.posYM = posYM
@@ -28,7 +31,7 @@ class Node(object):
         self.remainingFlowers = remainingFlowers
         self.remainingApples = remainingApples
 
-        self.value = self.evaluar(self.depth)
+        self.value = self.evaluar(self.depth, self.primerMov, self.player)
         print("profundidad: ", depth, " heuristica: ", self.value)
         self.children = []
         self.createChildren()
@@ -55,9 +58,14 @@ class Node(object):
     def getBoard(self):
         return self.board
 
-    def evaluar(self, primermov):
-        if primermov:
-            return self.puntosJM*10 - self.puntosJH
+    def evaluar(self, depth, primerMov, player):
+        if primerMov:
+            if depth == self.depthIni-1 and player == -1:
+                return self.puntosJM*10 - self.puntosJH
+            elif depth == self.depthIni-2 and player == 1:
+                return self.puntosJM - self.puntosJH*10
+            else:
+                return self.puntosJM - self.puntosJH
         else:
             return self.puntosJM - self.puntosJH
             
@@ -257,14 +265,14 @@ class Node(object):
                 copyBoard[antX][antY] = "--"
 
                 nuevoNodo = Node(-self.player, self.depth - 1, copyBoard, x, y,
-                                     self.puntosJH, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples, self.value)
+                                     self.puntosJH, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples, self.value, False)
                 self.children.append(nuevoNodo)
             
             else:
                 copyBoard[x][y] = "jM"
                 copyBoard[antX][antY] = "--"
                 nuevoNodo = Node(-self.player, self.depth - 1, copyBoard, self.posXJ, self.posYJ,
-                                     self.puntosJH, x, y, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples, self.value)
+                                     self.puntosJH, x, y, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples, self.value, False)
                 self.children.append(nuevoNodo)
 
 
@@ -273,14 +281,14 @@ class Node(object):
                 copyBoard[x][y] = "jH"
                 copyBoard[antX][antY] = "--"
                 nuevoNodo = Node(-self.player, self.depth - 1, copyBoard, x, y,
-                                     self.puntosJH + 1, self.posXM, self.posYM, self.puntosJM, self.remaininGrass - 1, self.remainingFlowers, self.remainingApples, self.value)
+                                     self.puntosJH + 1, self.posXM, self.posYM, self.puntosJM, self.remaininGrass - 1, self.remainingFlowers, self.remainingApples, self.value, True)
                 self.children.append(nuevoNodo)
 
             else:
                 copyBoard[x][y] = "jM"
                 copyBoard[antX][antY] = "--"
                 nuevoNodo = Node(-self.player, self.depth - 1, copyBoard, self.posXJ, self.posYJ,
-                                     self.puntosJH, x, y, self.puntosJM + 1, self.remaininGrass - 1, self.remainingFlowers, self.remainingApples, self.value)
+                                     self.puntosJH, x, y, self.puntosJM + 1, self.remaininGrass - 1, self.remainingFlowers, self.remainingApples, self.value, True)
                 self.children.append(nuevoNodo)
 
             
@@ -292,14 +300,14 @@ class Node(object):
                 copyBoard[x][y] = "jH"
                 copyBoard[antX][antY] = "--"
                 nuevoNodo = Node(-self.player, self.depth - 1, copyBoard, x, y,
-                                     self.puntosJH + 3, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers - 1, self.remainingApples, self.value)
+                                     self.puntosJH + 3, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers - 1, self.remainingApples, self.value,True)
                 self.children.append(nuevoNodo)
 
             else:
                 copyBoard[x][y] = "jM"
                 copyBoard[antX][antY] = "--"
                 nuevoNodo = Node(-self.player, self.depth - 1, copyBoard, self.posXJ, self.posYJ,
-                                     self.puntosJH, x, y, self.puntosJM + 3, self.remaininGrass, self.remainingFlowers - 1, self.remainingApples, self.value) 
+                                     self.puntosJH, x, y, self.puntosJM + 3, self.remaininGrass, self.remainingFlowers - 1, self.remainingApples, self.value, True) 
                 self.children.append(nuevoNodo)           
             
 
@@ -308,13 +316,13 @@ class Node(object):
                 copyBoard[x][y] = "jH"
                 copyBoard[antX][antY] = "--"
                 nuevoNodo = Node(-self.player, self.depth - 1, copyBoard, x, y,
-                                     self.puntosJH + 5, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples - 1, self.value)
+                                     self.puntosJH + 5, self.posXM, self.posYM, self.puntosJM, self.remaininGrass, self.remainingFlowers, self.remainingApples - 1, self.value, True)
                 self.children.append(nuevoNodo)
             else:
                 copyBoard[x][y] = "jM"
                 copyBoard[antX][antY] = "--"
                 nuevoNodo = Node(-self.player, self.depth - 1, copyBoard, self.posXJ, self.posYJ,
-                                     self.puntosJH, x, y, self.puntosJM + 5, self.remaininGrass, self.remainingFlowers, self.remainingApples - 1, self.value)
+                                     self.puntosJH, x, y, self.puntosJM + 5, self.remaininGrass, self.remainingFlowers, self.remainingApples - 1, self.value, True)
                 self.children.append(nuevoNodo)
 
         else:

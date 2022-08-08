@@ -50,6 +50,8 @@ class App():
         self.filaX = tk.IntVar()
         self.filaY = tk.IntVar()
 
+        self.nivel = 0
+
     def __call__(self):
         self.ventana.mainloop()
 
@@ -68,22 +70,43 @@ class App():
         filaX = 0
         filaY = 0
         texto1 = tk.Label(self.ventana, text = "Ingresa la posición donde quieres \nmover el caballo:", font='Helvetica 16')
-        texto1.place (x=670, y=60)
+        texto1.place (x=670, y=290)
 
         textoX=  tk.Label(self.ventana, text = "Posición en fila :", font='Helvetica 15')
-        textoX.place (x=650, y=200)
+        textoX.place (x=650, y=350)
 
         textoY=  tk.Label(self.ventana, text = "Posición en columna :", font='Helvetica 15')
-        textoY.place (x=650, y=270)
+        textoY.place (x=650, y=380)
 
-        cajaX = Entry(self.ventana, textvariable=self.filaX)
-        cajaX.place (x=850, y =200)
+        self.cajaX = Entry(self.ventana, textvariable=self.filaX, state=tk.DISABLED)
+        self.cajaX.place (x=850, y =350)
 
-        cajaY = Entry(self.ventana, textvariable=self.filaY)
-        cajaY.place (x=850, y =270)
+        self.cajaY = Entry(self.ventana, textvariable=self.filaY, state=tk.DISABLED)
+        self.cajaY.place (x=850, y =380)
 
-        botonPos = Button(self.interfaz, text= "Jugar movida", command= self.movHumano)
-        botonPos.place(x=780, y=500)
+        self.botonPos = Button(self.interfaz, text= "Jugar movida", command= self.movHumano, state=tk.DISABLED)
+        self.botonPos.place(x=780, y=500)
+
+        botonInit = Button(self.interfaz, text= "Iniciar juego", command= self.inicia, font='Helvetica 20')
+        botonInit.place(x=747, y=150)
+
+        self.textPuntosJH = tk.Label(self.ventana, text= self.puntosJH, font='Helvetica 14')
+        self.textPuntosJH.place(x=800, y=420)
+        
+        labelPuntosJH = tk.Label(self.ventana, text= "Puntos jugador : ", font='Helvetica 14')
+        labelPuntosJH.place(x=650, y=418)
+
+        self.textPuntosJM = tk.Label(self.ventana, text= self.puntosJM, font='Helvetica 14')
+        self.textPuntosJM.place(x=1005, y=420)
+        
+        labelPuntosJM = tk.Label(self.ventana, text= "Puntos máquina : ", font='Helvetica 14')
+        labelPuntosJM.place(x=850, y=418)
+
+        self.combo = ttk.Combobox(self.ventana)
+        self.combo.place(x=742, y=80)
+        self.combo['values'] = ('Nivel principiante', 'Nivel medio', 'Nivel avanzado')
+        self.combo.current(0)
+
 
     def dibujarTablero(self):
         # p = pasto, f = flor, m = manzana, jH = jugador humano, jM = jugador máquina
@@ -121,6 +144,44 @@ class App():
             turno = 1
 
         #self.movHumano()
+
+    def inicia(self):
+
+        if(self.combo.get() == "Nivel principiante"):
+            self.nivel = 2
+        elif(self.combo.get() == "Nivel medio"): 
+            self.nivel = 4
+        elif(self.combo.get() == "Nivel avanzado"): 
+            self.nivel = 6
+
+        maquina = IA.Node(self.turno, self.nivel, self.tablero[:], self.anteriorXJ2, self.anteriorYJ2, self.puntosJH ,self.anteriorXM, self.anteriorYM, self.puntosJM, self.remainingGrass,
+        self.remainingFlowers, self.remainingApples, 0, False)
+
+        bestChoice, bestValue = self.minimax(maquina, self.nivel, -self.turno)
+        print("mejor valor: ", bestValue)
+        self.tablero = maquina.children[bestChoice].getBoard()
+        self.remainingGrass = maquina.children[bestChoice].getRemaininGrass()
+        self.remainingFlowers = maquina.children[bestChoice].getRemaininFlowers()
+        self.remainingApples = maquina.children[bestChoice].getRemaininApples()
+
+        self.anteriorXM = maquina.children[bestChoice].getPosXM()
+        self.anteriorYM = maquina.children[bestChoice].getPosYM()
+
+        self.puntosJM = maquina.children[bestChoice].getPuntosJM()
+
+        self.winCheck()
+        print(self.tablero)
+        self.interfaz.delete("all")
+        self.dibujarTablero()
+        self.mostrarPiezas(self.tablero)
+
+        self.textPuntosJH.configure(text=self.puntosJH)
+        self.textPuntosJM.configure(text=self.puntosJM)
+
+        self.cajaX.config(state=tk.NORMAL)
+        self.cajaY.config(state=tk.NORMAL)
+        self.botonPos.config(state=tk.NORMAL)
+
 
 
     def movHumano(self):
@@ -184,6 +245,9 @@ class App():
                 print("EERRROOOOOR")
         else:
             print("EERRROOOOOR")
+
+        self.textPuntosJH.configure(text=self.puntosJH)
+        self.textPuntosJM.configure(text=self.puntosJM)
     
     def validarMov(self, x, y, xAnt, yAnt):
 
@@ -220,12 +284,12 @@ class App():
             print("error, es la casilla del otro jugador")
 
 
-        maquina = IA.Node(self.turno, 5, self.tablero[:], self.anteriorXJ2, self.anteriorYJ2, self.puntosJH ,self.anteriorXM, self.anteriorYM, self.puntosJM, self.remainingGrass,
-        self.remainingFlowers, self.remainingApples, 0)
+        maquina = IA.Node(self.turno, self.nivel, self.tablero[:], self.anteriorXJ2, self.anteriorYJ2, self.puntosJH ,self.anteriorXM, self.anteriorYM, self.puntosJM, self.remainingGrass,
+        self.remainingFlowers, self.remainingApples, 0, False)
 
         
 
-        bestChoice, bestValue = self.minimax(maquina, 5, -self.turno)
+        bestChoice, bestValue = self.minimax(maquina, self.nivel, -self.turno)
         print("mejor valor: ", bestValue)
         self.tablero = maquina.children[bestChoice].getBoard()
         self.remainingGrass = maquina.children[bestChoice].getRemaininGrass()
