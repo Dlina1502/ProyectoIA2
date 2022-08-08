@@ -87,8 +87,8 @@ class App():
         self.botonPos = Button(self.interfaz, text= "Jugar movida", command= self.movHumano, state=tk.DISABLED)
         self.botonPos.place(x=780, y=500)
 
-        botonInit = Button(self.interfaz, text= "Iniciar juego", command= self.inicia, font='Helvetica 20')
-        botonInit.place(x=747, y=150)
+        self.botonInit = Button(self.interfaz, text= "Iniciar juego", command= self.inicia, font='Helvetica 20')
+        self.botonInit.place(x=747, y=150)
 
         self.textPuntosJH = tk.Label(self.ventana, text= self.puntosJH, font='Helvetica 14')
         self.textPuntosJH.place(x=800, y=420)
@@ -148,7 +148,7 @@ class App():
     def inicia(self):
 
         if(self.combo.get() == "Nivel principiante"):
-            self.nivel = 2
+            self.nivel = 3
         elif(self.combo.get() == "Nivel medio"): 
             self.nivel = 4
         elif(self.combo.get() == "Nivel avanzado"): 
@@ -182,6 +182,8 @@ class App():
         self.cajaY.config(state=tk.NORMAL)
         self.botonPos.config(state=tk.NORMAL)
 
+        self.botonInit.config(state=tk.DISABLED)
+        self.combo.config(state=tk.DISABLED)
 
 
     def movHumano(self):
